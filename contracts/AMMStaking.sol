@@ -17,8 +17,8 @@ contract AMMStaking is ERC20 {
         uint256 amount
     );
     event HarvestRewards(
-        address indexed user, 
-        uint256 indexed poolId, 
+        address indexed user,
+        uint256 indexed poolId,
         uint256 amount
     );
 
@@ -57,14 +57,14 @@ contract AMMStaking is ERC20 {
         emit PoolCreated(pools.length - 1);
     }
 
-    function getPool(uint256 _poolId) external view returns(Pool memory) {
+    function getPool(uint256 _poolId) external view returns (Pool memory) {
         return pools[_poolId];
     }
 
-    function getStaker(uint256 _poolId) external view returns(Staker memory) {
+    function getStaker(uint256 _poolId) external view returns (Staker memory) {
         return poolStakers[_poolId][msg.sender];
     }
-    
+
     function deposit(uint256 _poolId, uint256 _amount) external {
         require(_amount > 0, "AMMStaking: invalid amount");
         Pool storage pool = pools[_poolId];
@@ -78,12 +78,12 @@ contract AMMStaking is ERC20 {
         if (staker.amountDeposited == 0) {
             staker.lastRewardedBlock = block.number;
         }
-        
+
         // overriding total amount
         pool.tokensStaked += _amount;
-        
+
         staker.amountDeposited += _amount;
-        
+
         emit Deposit(msg.sender, _poolId, _amount);
 
         IERC20(pool.tokenAddress).transferFrom(
@@ -109,9 +109,9 @@ contract AMMStaking is ERC20 {
 
     function harvestRewards(uint256 _poolId, uint256 _amount) public {
         Pool storage pool = pools[_poolId];
-        
+
         require(pool.stakers.length >= 3, "AMMStaking: nr stakers < 3");
-        
+
         Staker storage staker = poolStakers[_poolId][msg.sender];
 
         uint256 blocksSinceLastReward = block.number - staker.lastRewardedBlock;

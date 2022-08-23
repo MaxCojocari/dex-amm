@@ -89,9 +89,7 @@ contract AMMPairETH is IAMMPairETH, ERC20 {
             ? (msg.value * 997) / 1000
             : msg.value;
 
-        amountTokenOut =
-            (balanceToken * amountETHIn) /
-            (balanceETH + amountETHIn);
+        amountTokenOut = (balanceToken * amountETHIn) / (balanceETH + amountETHIn);
 
         amountTokenOut = !choiceETHFee
             ? (amountTokenOut * 997) / 1000

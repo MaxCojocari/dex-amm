@@ -22,8 +22,7 @@ contract AMMFactory is IAMMFactory {
         returns (address pair)
     {
         require(
-            pairs[_token0][_token1] == address(0) &&
-                pairs[_token1][_token0] == address(0),
+            pairs[_token0][_token1] == address(0) && pairs[_token1][_token0] == address(0),
             "AMMFactory: pair already exists"
         );
 

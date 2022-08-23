@@ -4,40 +4,34 @@ pragma solidity ^0.8.9;
 
 interface IAMMPairETH {
     function addLiquidity(uint256 amountTokenAdd, address _account)
-        external 
-        payable 
-        returns(
-            uint256 amountTokenIn, 
+        external
+        payable
+        returns (
+            uint256 amountTokenIn,
             uint256 amountETHIn,
             uint256 LPTokensMinted
         );
 
-    function removeLiquidity(uint256 LPTokensBurn, address _account) 
+    function removeLiquidity(uint256 LPTokensBurn, address _account)
         external
-        returns(
-            uint256 amountTokenOut,
-            uint256 amountETHOut
-        );
+        returns (uint256 amountTokenOut, uint256 amountETHOut);
 
-    function swapETHForToken(bool choiceETHFee, address _account) 
+    function swapETHForToken(bool choiceETHFee, address _account)
         external
         payable
-        returns(uint256 amountTokenOut);
+        returns (uint256 amountTokenOut);
 
     function swapTokenForETH(
-        uint256 amount, 
-        bool choiceETHFee, 
+        uint256 amount,
+        bool choiceETHFee,
         address _account
-    ) 
-        external
-        returns(uint256 amountETHOut);
-    
-    function getPrice(bool choiceETH) external view returns(uint);
+    ) external returns (uint256 amountETHOut);
+
+    function getPrice(bool choiceETH) external view returns (uint256);
 
     function sendLiquidity(
-        uint256 amountLPTokens, 
-        address _from, 
+        uint256 amountLPTokens,
+        address _from,
         address _to
-    )   external
-        returns(bool);
+    ) external returns (bool);
 }
