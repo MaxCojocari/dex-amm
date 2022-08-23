@@ -29,7 +29,7 @@ interface IAMMPair {
 
 
     /*
-    * @dev Removes liquidity from the pool
+    * @dev Removes liquidity from the pool.
     * 
     * @param LPTokensToBurn The amount of liquidity tokens to burn.
     * @param _account The address of the account which burns the LP tokens.
