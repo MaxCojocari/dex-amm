@@ -52,14 +52,14 @@ interface IAMMPair {
 
 
     /*
-    * @dev Swaps provided token for another token according to pool ratio.
+    * @dev Swaps provided token for another token according to the pool ratio.
     * 
     * @param _tokenIn The address of token to sell. It must be present in the pool.
     * @param amount The amount of token to swap.
     * @param choiceAssetFee The address of token chosen for fee payments.
     * @param _account The address of account who provides tokens to be swaped.
     *
-    * @return amountIn The amount of token provided for swap.
+    * @return amountIn The amount of token provided for swapping.
     * @return amountOut The amount of token given.
     */
     function swap(
