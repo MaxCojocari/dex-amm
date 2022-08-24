@@ -18,7 +18,7 @@ The `AMMRouter.sol` contract is a high-level contract that serves as the entrypo
 
 ## Liquidity mining
 
-The `AMMStaking.sol` deals with liquidity mining. It is nothing else than a simple staking pool: newly minted LP tokens can be deposited in vaults and for this you can be awarded with exclusive TitaniumSweet tokens (TSW). The more you deposit, the longer staking time you apply, the more tokens you can earn. It sounds really sweet, doesn it?:money_mouth_face:
+The `AMMStaking.sol` deals with liquidity mining. It is nothing else than a simple staking pool: newly minted LP tokens can be deposited in vaults and for this you can be awarded with exclusive TitaniumSweet tokens (TSW). The more you deposit, the longer staking time you apply, the more tokens you can earn. It sounds really sweet, doesn't it?:money_mouth_face:
 
 The algorithm is based on the following formula.
 
