@@ -1,31 +1,62 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
-// will compile your contracts, add the Hardhat Runtime Environment's members to the
-// global scope, and execute the script.
 const hre = require("hardhat");
+const ethers = hre.ethers;
+const fs = require('fs');
+const path = require('path');
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const [owner] = await ethers.getSigners()
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  const AMMRouter = await ethers.getContractFactory("AMMRouter", owner)
+  const router = await AMMRouter.deploy()
+  await router.deployed()
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const AMMStaking = await ethers.getContractFactory("AMMStaking", owner)
+  const stakingManager = await AMMStaking.deploy()
+  await stakingManager.deployed()
 
-  await lock.deployed();
 
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  console.log("AMMRouter deployed successfully:", router.address)
+  console.log("AMMStaking deployed successfully:", stakingManager.address)
+
+  saveFrontendFiles({
+    AMMRouter: router,
+    AMMStaking: stakingManager
+  })
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+
+function saveFrontendFiles(contracts) {
+  const contractsDir = path.join(__dirname, '/..', 'src/contracts')
+
+  if (!fs.existsSync(contractsDir)) {
+    fs.mkdirSync(contractsDir)
+  }
+
+  Object.entries(contracts).forEach((contractItem) => {
+    const [name, contract] = contractItem
+
+    if (contract) {
+      fs.writeFileSync(
+        path.join(contractsDir, '/', name + '-contract-address.json'),
+        JSON.stringify({[name]: contract.address}, undefined, 2)
+      )
+    }
+
+    const ContractArtifact = hre.artifacts.readArtifactSync(name)
+
+    fs.writeFileSync(
+      path.join(contractsDir, '/', name + ".json"),
+      JSON.stringify(ContractArtifact, null, 2)
+    )
+
+  })
+
+}
+
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
 });
