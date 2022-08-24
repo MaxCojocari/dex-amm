@@ -23,7 +23,7 @@ interface IAMMFactory {
     * @param _token0 The address of the first token.
     * @param _token1 The address of the second token.
     *
-    * @return The address of the pool.
+    * @return The address of the pool contract.
     */
     function getAddressPair(address _token0, address _token1)
         external
