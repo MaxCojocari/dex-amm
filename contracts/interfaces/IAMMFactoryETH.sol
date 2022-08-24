@@ -7,7 +7,7 @@ interface IAMMFactoryETH {
     * @dev Adds a new pair ETH - ERC20 token. It reverts if
     * pair already exists, even though the tokens are swaped.
     *
-    * @param _token The address of token's contract.
+    * @param _token The address of token contract.
     *
     * @return The address of the pool contract.
     */
@@ -18,7 +18,7 @@ interface IAMMFactoryETH {
     * @dev Returns the address of the pool contract for specific pair ETH - token.
     * Zero address is returned if pool doesn't exist.
     *
-    * @param _token The address of token's contract.
+    * @param _token The address of token contract.
     *
     * @return The address of the pool contract.
     */
