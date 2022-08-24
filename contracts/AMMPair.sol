@@ -72,7 +72,7 @@ contract AMMPair is IAMMPair, ERC20 {
             amount1In = (balanceToken1 * LPTokensMinted) / LPTokenBalance;
         }
 
-        // even though the amount of liquidity breaks the ration
+        // even though the amount of liquidity breaks the ratio
         // the extra tokens may be given back to LP providers as reward fee
         balanceToken0 += amount0Add;
         balanceToken1 += amount1Add;
