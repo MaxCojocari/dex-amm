@@ -17,7 +17,7 @@ interface IAMMFactory {
     * @dev Returns the address of the pool contract for specific pair of tokens.
     * Zero address is returned if pool doesn't exist.
     *
-    * @return The address of the pool
+    * @return The address of the pool.
     */
     function getAddressPair(address _token0, address _token1)
         external
