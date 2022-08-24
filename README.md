@@ -25,7 +25,7 @@ The algorithm is based on the following formula.
 ![image](https://user-images.githubusercontent.com/92053176/186395419-e5c16535-7d00-479d-aecf-66bd763b10c9.png)
 
 
-The `nrTokensPerBlock` is set by the owner of `AMMStaking.sol` contract. The number of stakers in pool should greater than a specified number (here 3, can be reseted respectively). The idea is inspired a little bit from SushiSwap paradigma. So there is a lot of space for improvement in my implementation.
+The `nrTokensPerBlock` is set by the owner of `AMMStaking.sol` contract. The number of stakers in pool should be greater than a specified number (here 3, can be reseted respectively). The idea is inspired a little bit from SushiSwap paradigma. So there is a lot of space for improvement in my implementation.
 
 ## QA & Testing coverage
 All contracts, except for openzeppelin ERC20 and `Token.sol` contracts, were fully checked and tested. For full test report, clone this repistory and run the command:
