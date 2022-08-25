@@ -21,6 +21,10 @@ contract AMMPair is IAMMPair, ERC20 {
         token1 = _token1;
     }
 
+    function syncBalances() internal {
+        balanceToken0 = IERC20(token0).balanceOf(address(this));
+        balanceToken1 = IERC20(token0).balanceOf(address(this));
+    }
 
     /*
     * @dev Adds liquidity to the pool token0-token1 (both ERC20 tokens).
@@ -50,6 +54,8 @@ contract AMMPair is IAMMPair, ERC20 {
         require(amount0Add > 0 && amount1Add > 0, "AMMPair: invalid amount");
 
         uint256 LPTokenBalance = IERC20(address(this)).totalSupply();
+        
+        syncBalances();
 
         if (LPTokenBalance == 0) {
             // the initial provider sets the pool ratio and 
@@ -72,15 +78,15 @@ contract AMMPair is IAMMPair, ERC20 {
             amount1In = (balanceToken1 * LPTokensMinted) / LPTokenBalance;
         }
 
+        IERC20(token0).transferFrom(_provider, address(this), amount0Add);
+        IERC20(token1).transferFrom(_provider, address(this), amount1Add);
+        
+        _mint(_provider, LPTokensMinted);
+
         // even though the amount of liquidity breaks the ratio
         // the extra tokens may be given back to LP providers as reward fee
         balanceToken0 += amount0Add;
         balanceToken1 += amount1Add;
-
-        _mint(_provider, LPTokensMinted);
-
-        IERC20(token0).transferFrom(_provider, address(this), amount0Add);
-        IERC20(token1).transferFrom(_provider, address(this), amount1Add);
     }
 
 
@@ -104,19 +110,21 @@ contract AMMPair is IAMMPair, ERC20 {
         );
 
         uint256 currentLPBalance = IERC20(address(this)).totalSupply();
+        
+        syncBalances();
 
         // the amount of tokens returned out is proportional 
         // to the amount of LP tokens minted
         amount0Out = (balanceToken0 * LPTokensBurn) / currentLPBalance;
         amount1Out = (balanceToken1 * LPTokensBurn) / currentLPBalance;
 
-        balanceToken0 -= amount0Out;
-        balanceToken1 -= amount1Out;
-
         _burn(_account, LPTokensBurn);
 
         IERC20(token0).transfer(_account, amount0Out);
         IERC20(token1).transfer(_account, amount1Out);
+        
+        balanceToken0 -= amount0Out;
+        balanceToken1 -= amount1Out;
     }
 
 
@@ -147,6 +155,8 @@ contract AMMPair is IAMMPair, ERC20 {
         );
         require(amount > 0, "AMMPair: invalid amount");
 
+        syncBalances();
+
         address tokenIn;
         address tokenOut;
         bool isTokenInToken0 = _tokenIn == token0;
@@ -172,6 +182,9 @@ contract AMMPair is IAMMPair, ERC20 {
 
         require(amountOut > 0, "AMMPair: insufficient output amount");
 
+        IERC20(tokenIn).transferFrom(_account, address(this), amount);
+        IERC20(tokenOut).transfer(_account, amountOut);
+
         // update the pool reserves
         balanceToken0 = isTokenInToken0
             ? (balanceToken0 + amount)
@@ -179,9 +192,6 @@ contract AMMPair is IAMMPair, ERC20 {
         balanceToken1 = isTokenInToken0
             ? (balanceToken1 - amountOut)
             : (balanceToken1 + amount);
-
-        IERC20(tokenIn).transferFrom(_account, address(this), amount);
-        IERC20(tokenOut).transfer(_account, amountOut);
     }
 
 
