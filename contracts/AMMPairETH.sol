@@ -45,6 +45,7 @@ contract AMMPairETH is IAMMPairETH, ERC20 {
         );
 
         uint256 LPTokenBalance = IERC20(address(this)).totalSupply();
+        balanceToken = IERC20(token).balanceOf(address(this));        
 
         if (LPTokenBalance == 0) {
             // the initial provider sets the pool ratio and 
@@ -65,14 +66,14 @@ contract AMMPairETH is IAMMPairETH, ERC20 {
             amountETHIn = (balanceETH * LPTokensMinted) / LPTokenBalance;
         }
 
+        IERC20(token).transferFrom(_account, address(this), amountTokenAdd);
+        
+        _mint(_account, LPTokensMinted);
+
         // even though the amount of liquidity breaks the ratio
         // the extra tokens may be given back to LP providers as reward fee
         balanceETH = address(this).balance;
         balanceToken += amountTokenAdd;
-
-        _mint(_account, LPTokensMinted);
-
-        IERC20(token).transferFrom(_account, address(this), amountTokenAdd);
     }
 
 
@@ -96,18 +97,20 @@ contract AMMPairETH is IAMMPairETH, ERC20 {
         );
 
         uint256 LPTokenBalance = IERC20(address(this)).totalSupply();
+        balanceToken = IERC20(token).balanceOf(address(this));
 
         // the amount of tokens returned out is proportional 
         // to the amount of LP tokens minted
         amountETHOut = (balanceETH * LPTokensBurn) / LPTokenBalance;
         amountTokenOut = (balanceToken * LPTokensBurn) / LPTokenBalance;
 
-        balanceETH = address(this).balance - amountETHOut;
-        balanceToken -= amountTokenOut;
-
         _burn(_account, LPTokensBurn);
 
         IERC20(token).transfer(_account, amountTokenOut);
+
+        balanceToken -= amountTokenOut;
+        balanceETH = address(this).balance - amountETHOut;
+        
         payable(_account).transfer(amountETHOut);
     }
 
@@ -145,11 +148,11 @@ contract AMMPairETH is IAMMPairETH, ERC20 {
 
         require(amountTokenOut > 0, "AMMPairETH: insufficient output amount");
 
+        IERC20(token).transfer(_account, amountTokenOut);
+
         // we already received ETH, no need for extra additions
         balanceETH = address(this).balance;
         balanceToken -= amountTokenOut;
-
-        IERC20(token).transfer(_account, amountTokenOut);
     }
 
 
@@ -180,10 +183,11 @@ contract AMMPairETH is IAMMPairETH, ERC20 {
 
         require(amountETHOut > 0, "AMMPairETH: insufficient output amount");
 
-        balanceETH = address(this).balance - amountETHOut;
-        balanceToken += amount;
-
         IERC20(token).transferFrom(_account, address(this), amount);
+
+        balanceToken += amount;
+        balanceETH = address(this).balance - amountETHOut;
+
         payable(_account).transfer(amountETHOut);
     }
 
