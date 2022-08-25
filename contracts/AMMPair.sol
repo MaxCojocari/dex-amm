@@ -23,7 +23,7 @@ contract AMMPair is IAMMPair, ERC20 {
 
     function syncBalances() internal {
         balanceToken0 = IERC20(token0).balanceOf(address(this));
-        balanceToken1 = IERC20(token0).balanceOf(address(this));
+        balanceToken1 = IERC20(token1).balanceOf(address(this));
     }
 
     /*
