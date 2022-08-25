@@ -30,3 +30,4 @@ interface IAMMFactoryETH {
     */
     event AddPair(address indexed token, address pair);
 }
+
