@@ -1,4 +1,4 @@
-# DEX/AMM
+# DEXify
 
 This project represents an implementation of Decentralized Exchange (DEX) contracts using a classical (constant product) **Automated Market Maker** (AMM) principle for ERC20 tokens.
 
